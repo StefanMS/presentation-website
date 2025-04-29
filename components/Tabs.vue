@@ -1,24 +1,31 @@
 <template>
   <div>
-    <div class="flex gap-4 mb-4 border-b">
+    <!-- Modern Tabs -->
+    <div class="flex flex-wrap gap-2 mb-6">
       <button
         v-for="tab in tabs"
         :key="tab"
         @click="activeTab = tab"
         :class="[
-          'py-2 px-4',
+          'py-2 px-5 rounded-full text-sm font-medium transition-all duration-300',
           activeTab === tab
-            ? 'border-b-2 border-blue-600 font-semibold'
-            : 'text-gray-500'
+            ? 'bg-blue-600 text-white shadow-md'
+            : 'bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-700'
         ]"
       >
         {{ tab }}
       </button>
     </div>
 
-    <div class="bg-gray-100 p-4 rounded">
-      <component :is="currentComponent" />
-    </div>
+    <!-- Animated Panel -->
+    <transition name="fade" mode="out-in">
+      <div
+        :key="activeTab"
+        class="bg-white rounded-xl shadow-inner border border-gray-100 p-6"
+      >
+        <component :is="currentComponent" />
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -72,3 +79,25 @@ const currentComponent = computed(() => {
   return loader ? defineAsyncComponent(loader) : null
 })
 </script>
+
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.fade-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+</style>
